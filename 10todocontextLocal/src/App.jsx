@@ -27,18 +27,23 @@ function App() {
   === id ? {...prevTodo,completed:!prevTodo.completed} : prevTodo))
   }
 
-  useEffect(()=>{
-  const todos = JSON.parse(localStorage.getItem("todos"))
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
 
-  if(todos && todos.lenght>0){
-    setTodos(todos)
-  }
+    try {
+      const parsedTodos = JSON.parse(storedTodos);
 
-  },[])
+      if (Array.isArray(parsedTodos) && parsedTodos.length > 0) {
+        setTodos(parsedTodos);
+      }
+    } catch (error) {
+      console.error("Failed to parse todos from localStorage", error);
+    }
+  }, []);
 
-useEffect(() => {
-  localStorage.setItem("todos", JSON.stringify(todos))
-},[todos])
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
 
   return (
